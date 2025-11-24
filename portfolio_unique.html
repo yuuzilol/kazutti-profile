@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Portfolio — Yuuzilol</title>
+<style>
+  /* Reset & base */
+  :root{
+    --bg:#0b0f1a; --card:#0f1724; --accent:#7c5cff; --muted:#9aa4b2; --glass:rgba(255,255,255,0.03);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;font-family:Inter, "Noto Sans JP", system-ui, -apple-system, 'Segoe UI', Roboto, 'Hiragino Kaku Gothic ProN', sans-serif;background:radial-gradient(1200px 600px at 10% 10%, rgba(124,92,255,0.08), transparent), radial-gradient(900px 500px at 90% 90%, rgba(3,195,174,0.035), transparent), var(--bg);color:#e8eef8;-webkit-font-smoothing:antialiased;}
+  a{color:inherit}
+
+  /* layout */
+  .wrap{max-width:1200px;margin:48px auto;padding:28px;border-radius:16px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);box-shadow:0 10px 40px rgba(2,6,23,0.7);position:relative;overflow:hidden}
+  header{display:flex;align-items:center;gap:20px}
+  .logo{width:72px;height:72px;border-radius:14px;background:linear-gradient(135deg,var(--accent),#12c2e9);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:20px;color:#fff;box-shadow:0 6px 18px rgba(124,92,255,0.18)}
+  h1{margin:0;font-size:28px}
+  p.lead{margin:4px 0 0;color:var(--muted)}
+
+  /* hero */
+  .hero{display:flex;align-items:center;gap:28px;margin-top:28px}
+  .intro{flex:1}
+  .eyebrow{display:inline-block;padding:6px 10px;border-radius:999px;background:linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));font-size:13px;color:var(--muted);}
+  .title{font-size:44px;margin:12px 0 6px;line-height:1.02}
+  .title .accent{background:linear-gradient(90deg,var(--accent),#14d3a5);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .cta{margin-top:18px;display:flex;gap:12px}
+  .btn{padding:12px 16px;border-radius:10px;border:0;cursor:pointer;font-weight:600;background:var(--accent);color:#fff;box-shadow:0 10px 30px rgba(124,92,255,0.12)}
+  .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
+
+  /* visual canvas */
+  .canvas{width:460px;height:320px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.08));box-shadow:inset 0 -40px 60px rgba(0,0,0,0.35);position:relative;overflow:hidden}
+  .orb{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:420px;height:420px;filter:blur(36px);opacity:0.9;mix-blend-mode:screen}
+  /* animated waveform */
+  .wave{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+  svg#wave{width:100%;height:100%;opacity:0.95}
+
+  /* sections */
+  section.projects{margin-top:34px}
+  .controls{display:flex;gap:8px;flex-wrap:wrap}
+  .filters button{padding:8px 12px;border-radius:999px;border:0;background:var(--glass);color:var(--muted);cursor:pointer}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:16px}
+  .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);border-radius:12px;padding:16px;min-height:160px;display:flex;flex-direction:column;gap:8px;cursor:pointer;transition:transform .28s,box-shadow .28s}
+  .card:hover{transform:translateY(-8px);box-shadow:0 20px 40px rgba(2,6,23,0.6)}
+  .card .meta{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:13px}
+  .tags{display:flex;gap:8px;flex-wrap:wrap}
+  .tag{padding:6px 8px;border-radius:999px;background:rgba(255,255,255,0.03);font-size:12px}
+
+  /* modal */
+  .modal{position:fixed;inset:0;background:rgba(2,6,23,0.6);display:none;align-items:center;justify-content:center;padding:28px}
+  .modal .sheet{width:900px;max-width:calc(100% - 56px);background:linear-gradient(180deg,#0e1624, #071020);border-radius:14px;padding:18px;box-shadow:0 30px 80px rgba(2,6,23,0.8)}
+  .close{float:right;cursor:pointer}
+
+  /* footer */
+  footer{margin-top:28px;display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:14px}
+
+  /* interactions */
+  .cursor{position:fixed;left:0;top:0;width:14px;height:14px;border-radius:50%;pointer-events:none;border:2px solid rgba(255,255,255,0.08);transform:translate(-50%,-50%);mix-blend-mode:screen;transition:transform .12s,background .12s}
+
+  /* responsive */
+  @media(max-width:1000px){.grid{grid-template-columns:repeat(2,1fr)}.hero{flex-direction:column}.canvas{width:100%;height:240px}}
+  @media(max-width:640px){.grid{grid-template-columns:1fr}.title{font-size:28px}}
+</style>
+</head>
+<body>
+  <div class="wrap" id="app">
+    <header>
+      <div class="logo" id="logo">YL</div>
+      <div>
+        <h1 id="name">Yuuzilol — Creative Technologist</h1>
+        <p class="lead">Designing product experiences, interactive visuals, and clean code that hums.</p>
+      </div>
+      <div style="margin-left:auto">
+        <button class="btn" id="downloadCv">Resume</button>
+      </div>
+    </header>
+
+    <div class="hero">
+      <div class="intro">
+        <span class="eyebrow">独創的 × 技術</span>
+        <div class="title">I craft <span class="accent">interactive</span> products & visual systems</div>
+        <p class="lead">視覚的に印象を残す UI/UX と、再利用可能で美しいコードを作ります。プログラム的な美しさとアナログの温度感を混ぜた表現が得意です。</p>
+        <div class="cta">
+          <button class="btn" id="contactBtn">Contact</button>
+          <button class="btn ghost" id="projectsBtn">Projects</button>
+        </div>
+      </div>
+
+      <div class="canvas" id="canvas" aria-hidden="true">
+        <div class="orb" id="orb">
+          <svg viewBox="0 0 600 600" preserveAspectRatio="xMidYMid meet">
+            <defs>
+              <linearGradient id="g1" x1="0" x2="1">
+                <stop offset="0" stop-color="#7c5cff" stop-opacity="0.9"/>
+                <stop offset="1" stop-color="#14d3a5" stop-opacity="0.9"/>
+              </linearGradient>
+              <filter id="f1"><feTurbulence baseFrequency="0.8" numOctaves="2" result="t"/><feDisplacementMap in="SourceGraphic" in2="t" scale="20"/></filter>
+            </defs>
+            <g filter="url(#f1)">
+              <circle cx="300" cy="300" r="160" fill="url(#g1)" opacity="0.9"></circle>
+            </g>
+          </svg>
+        </div>
+        <div class="wave">
+          <svg id="wave" viewBox="0 0 800 200" preserveAspectRatio="none">
+            <path id="p" d="M0 100 C200 20 600 180 800 100 L800 200 L0 200 Z" fill="rgba(255,255,255,0.04)"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <section class="projects" id="projects">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h2 style="margin:0">Selected Projects</h2>
+        <div class="controls">
+          <div class="filters">
+            <button data-filter="all" class="active">All</button>
+            <button data-filter="web">Web</button>
+            <button data-filter="viz">Visuals</button>
+            <button data-filter="game">Game</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid" id="grid">
+        <!-- cards populated by JS -->
+      </div>
+    </section>
+
+    <footer>
+      <div>© <span id="year"></span> Yuuzilol. Built with ❤️ and JS.</div>
+      <div class="socials"><a href="https://yuuuzi.pages.dev">Main</a> • <a href="https://yuuzi.f5.si">Sub</a> • <a href="https://yuuzilol.f5.si">Alt</a></div>
+    </footer>
+  </div>
+
+  <div class="modal" id="modal">
+    <div class="sheet" id="sheet">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+        <h3 id="modalTitle" style="margin:0">Project</h3>
+        <div class="close" id="closeModal">✕</div>
+      </div>
+      <div id="modalBody" style="color:var(--muted)">Loading…</div>
+    </div>
+  </div>
+
+  <div class="cursor" id="cursor"></div>
+
+<script>
+// --- small data-driven portfolio (replace with your real projects) ---
+const projects = [
+  {id:'p1',title:'Interactive Sound Lab',type:'viz',desc:'リアルタイムで音を可視化するブラウザアプリ。WebAudio と Canvas を使い独自の波形美を生成。',tags:['WebAudio','Canvas','Realtime']},
+  {id:'p2',title:'Micro Indie Game',type:'game',desc:'短編パズルゲーム。音と物理の組み合わせで感情的な体験を設計。',tags:['Phaser','Design']},
+  {id:'p3',title:'Portfolio CMS',type:'web',desc:'htmlのみで作ったwebsite。',tags:['Jamstack','Performance']},
+  {id:'p4',title:'Generative Posters',type:'viz',desc:'アルゴリズムで生成されるアートポスター。SVG とノイズベースのグラデーションで表現。',tags:['SVG','Generative']},
+  {id:'p5',title:'Experimental UI Kit',type:'web',desc:'アニメーションとアクセシビリティを両立した UI コンポーネント集。',tags:['Design','Accessibility']},
+  {id:'p6',title:'AR Concept Prototype',type:'game',desc:'モバイル用の拡張現実プロトタイプ（デモ）。',tags:['AR','Prototype']}
+];
+
+// render cards
+const grid = document.getElementById('grid');
+function render(filter='all'){
+  grid.innerHTML='';
+  const list = projects.filter(p=> filter==='all' ? true : p.type===filter);
+  list.forEach(p=>{
+    const el = document.createElement('div'); el.className='card'; el.tabIndex=0;
+    el.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center"><strong>${p.title}</strong><div class="meta">${p.type.toUpperCase()}</div></div><div style="flex:1;color:var(--muted);font-size:14px">${p.desc}</div><div class="tags">${p.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>`;
+    el.addEventListener('click', ()=> openModal(p));
+    grid.appendChild(el);
+  });
+}
+render();
+
+// filters
+document.querySelectorAll('.filters button').forEach(b=> b.addEventListener('click', ()=>{
+  document.querySelectorAll('.filters button').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active'); render(b.dataset.filter);
+}));
+
+// modal
+const modal = document.getElementById('modal'); const sheet = document.getElementById('sheet');
+function openModal(p){ document.getElementById('modalTitle').textContent = p.title; document.getElementById('modalBody').innerHTML = `<p style="margin-top:4px;color:var(--muted)">${p.desc}</p><p style="margin-top:12px">Tags: ${p.tags.join(', ')}</p><div style="margin-top:12px"><button class="btn" onclick="openProject('${p.id}')">Open demo</button></div>`; modal.style.display='flex'; }
+function closeModal(){ modal.style.display='none'; }
+document.getElementById('closeModal').addEventListener('click', closeModal);
+modal.addEventListener('click', (e)=>{ if(e.target===modal) closeModal(); });
+function openProject(id){ alert('デモを開くhttps://yuuuzi.pages.dev：'+id); }
+
+// canvas animation (gentle morph)
+const path = document.getElementById('p'); let t=0; function animate(){ t+=0.008; const a = 100 + Math.sin(t)*40; const b = 180 + Math.cos(t*0.9)*40; path.setAttribute('d', `M0 100 C200 ${a} 600 ${b} 800 100 L800 200 L0 200 Z`); requestAnimationFrame(animate);} animate();
+
+// cursor
+const cursor = document.getElementById('cursor'); document.addEventListener('mousemove', e=>{ cursor.style.left = e.clientX+'px'; cursor.style.top = e.clientY+'px'; });
+['a','button','.card'].forEach(sel=> document.querySelectorAll(sel).forEach(el=>{ el.addEventListener('mouseenter', ()=> cursor.style.transform='translate(-50%,-50%) scale(1.8)'); el.addEventListener('mouseleave', ()=> cursor.style.transform='translate(-50%,-50%) scale(1)'); }));
+
+// hero CTA actions
+document.getElementById('projectsBtn').addEventListener('click', ()=>{ document.getElementById('projects').scrollIntoView({behavior:'smooth'}); });
+document.getElementById('contactBtn').addEventListener('click', ()=>{ window.location.href = 'mailto:you@example.com?subject=Portfolio%20Contact'; });
+
+// download resume (example: simple text -> blob)
+document.getElementById('downloadCv').addEventListener('click', ()=>{
+  const text = `Resume\n\nYuuzilol — Creative Technologist\nEmail: you@example.com\nSkills: JS, SVG, WebAudio, Design`;
+  const blob = new Blob([text], {type:'text/plain'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href=url; a.download='resume.txt'; a.click(); URL.revokeObjectURL(url);
+});
+
+// set year
+document.getElementById('year').textContent = new Date().getFullYear();
+
+// accessibility: keyboard open first project
+document.addEventListener('keydown', e=>{ if(e.key==='Enter'){ const first = document.querySelector('.card'); if(first) first.click(); } });
+
+</script>
+</body>
+</html>
